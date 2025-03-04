@@ -1,0 +1,76 @@
+string filePath = @"C:\Users\matel\source\repos\Versenyzők\Versenyzők\pilotak.csv";
+List<string[]> drivers = new List<string[]>();
+
+using (var reader = new StreamReader(filePath))
+{
+    reader.ReadLine();
+
+    while (!reader.EndOfStream)
+    {
+        string line = reader.ReadLine();
+        string[] values = line.Split(';');
+        drivers.Add(values);
+    }
+}
+//3. feladat
+Console.WriteLine($"3. feladat: {drivers.Count}");
+
+//4. feladat
+Console.WriteLine($"4. feladat{drivers[drivers.Count - 1][0]}");
+
+//5. feladat
+Console.WriteLine("5. feladat");
+foreach (var driver in drivers)
+{
+    if (DateTime.TryParse(driver[1], out DateTime birthDate) && birthDate.Year < 1901)
+    {
+        Console.WriteLine($"{driver[0]} ({driver[1]})");
+    }
+}
+
+//6. feladat
+int small = int.MaxValue;
+string smallNat = "";
+foreach (var driver in drivers)
+{
+    if (driver.Length > 3 && !string.IsNullOrEmpty(driver[3]))
+    {
+        if (int.TryParse(driver[3], out int currentNumber))
+        {
+            if (currentNumber < small)
+            {
+                small = currentNumber;
+                smallNat = driver[2];
+            }
+        }
+    }
+}
+Console.WriteLine($"6. feladat: {smallNat}");
+
+//7. feladat
+List<int> duplicateNumbers = new List<int>();
+Dictionary<int, int> raceNumbers = new Dictionary<int, int>();
+
+foreach (var driver in drivers)
+{
+    if (driver.Length > 3 && !string.IsNullOrEmpty(driver[3]))
+    {
+        if (int.TryParse(driver[3], out int number))
+        {
+            if (raceNumbers.ContainsKey(number))
+                raceNumbers[number]++;
+            else
+                raceNumbers[number] = 1;
+        }
+    }
+}
+
+foreach (var entry in raceNumbers)
+{
+    if (entry.Value > 1)
+    {
+        duplicateNumbers.Add(entry.Key);
+    }
+}
+
+Console.WriteLine($"7. feladat: {string.Join(", ", duplicateNumbers)}");
